@@ -40,6 +40,7 @@ public class UsuarioService {
                 usuario.getId(),
                 usuario.getNombre(),
                 usuario.getGmail(),
+                usuario.getRol(),
                 token
         );
     }
@@ -54,6 +55,7 @@ public class UsuarioService {
         usuario.setNombre(request.getNombre());
         usuario.setGmail(request.getGmail());
         usuario.setPassword(passwordHash.hash(request.getPassword()));
+        usuario.setRol("USUARIO");
 
         usuario = usuarioRepository.save(usuario);
 
@@ -67,6 +69,7 @@ public class UsuarioService {
                 usuario.getId(),
                 usuario.getNombre(),
                 usuario.getGmail(),
+                usuario.getRol(),
                 token
         );
     }

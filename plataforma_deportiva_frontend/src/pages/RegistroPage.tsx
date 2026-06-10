@@ -22,6 +22,7 @@ function RegistroPage() {
             localStorage.setItem("id", data.id);
             localStorage.setItem("nombre", data.nombre);
             localStorage.setItem("gmail", data.gmail);
+            localStorage.setItem("rol", data.rol);
 
             navigate("/home");
         } else {

@@ -30,12 +30,17 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales inválidas");
         }
 
-        String token = jwtService.generarToken(usuario.getId(), usuario.getGmail(), usuario.getNombre());
+        String token = jwtService.generarToken(
+                usuario.getId(),
+                usuario.getGmail(),
+                usuario.getNombre()
+        );
 
         return new LoginResponse(
                 usuario.getId(),
                 usuario.getNombre(),
                 usuario.getGmail(),
+                usuario.getRol(),
                 token
         );
     }

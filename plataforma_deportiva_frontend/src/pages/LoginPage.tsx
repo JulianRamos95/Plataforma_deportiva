@@ -20,8 +20,13 @@ function LoginPage() {
             localStorage.setItem("id", data.id);
             localStorage.setItem("nombre", data.nombre);
             localStorage.setItem("gmail", data.gmail);
+            localStorage.setItem("rol", data.rol);
 
-            navigate("/home");
+            if (data.rol === "ADMIN") {
+                navigate("/admin");
+            } else {
+                navigate("/home");
+            }
         } else {
             alert("Credenciales incorrectas");
         }

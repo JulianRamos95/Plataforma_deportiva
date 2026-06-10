@@ -60,6 +60,42 @@ function PartidosPage() {
         }
     }
 
+    async function cargarJornadaProximaAJugar() {
+        if (!ligaId) {
+            return;
+        }
+
+        const response = await fetch("http://localhost:8080/api/partidos/liga/" + ligaId, {
+            method: "GET",
+            headers: new Headers({
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            })
+        });
+
+        if (response.ok) {
+            const todosPartidos: Partido[] = await response.json();
+
+            if (todosPartidos.length === 0) {
+                setJornada(1);
+                setPartidos([]);
+                return;
+            }
+
+            let jornadaProxima = todosPartidos[0].jornada;
+
+            for (let i = 0; i < todosPartidos.length; i++) {
+                if (todosPartidos[i].estado === "Programado") {
+                    jornadaProxima = todosPartidos[i].jornada;
+                    break;
+                }
+            }
+
+            setJornada(jornadaProxima);
+            cargarPartidos(jornadaProxima);
+        }
+    }
+
     function jornadaAnterior() {
         if (jornada > 1) {
             const nuevaJornada = jornada - 1;
@@ -78,7 +114,7 @@ function PartidosPage() {
 
     useEffect(() => {
         calcularMaxJornadas();
-        cargarPartidos(1);
+        cargarJornadaProximaAJugar();
     }, []);
 
     if (!ligaId) {

@@ -7,6 +7,7 @@ function Header() {
     const token = localStorage.getItem("token");
     const nombre = localStorage.getItem("nombre");
     const ligaId = localStorage.getItem("ligaId");
+    const rol = localStorage.getItem("rol");
 
     const esPantallaPublica =
         location.pathname === "/login" ||
@@ -25,13 +26,20 @@ function Header() {
         navigate("/home");
     }
 
+    function irAdmin() {
+        localStorage.removeItem("ligaId");
+        localStorage.removeItem("ligaNombre");
+
+        navigate("/admin");
+    }
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark app-navbar">
             <div className="container">
 
                 <Link
                     className="navbar-brand fw-bold"
-                    to={token ? "/home" : "/login"}
+                    to={token ? (rol === "ADMIN" ? "/admin" : "/home") : "/login"}
                 >
                     <i className="fa-regular fa-futbol"></i> FutbolTrack
                 </Link>
@@ -60,6 +68,17 @@ function Header() {
                                     </button>
                                 </li>
 
+                                {rol === "ADMIN" && (
+                                    <li className="nav-item">
+                                        <button
+                                            className="nav-link bg-transparent border-0"
+                                            onClick={irAdmin}
+                                        >
+                                            Admin
+                                        </button>
+                                    </li>
+                                )}
+
                                 {ligaId && (
                                     <>
                                         <li className="nav-item">
@@ -83,6 +102,12 @@ function Header() {
                                 <span className="text-white small">
                                     {nombre}
                                 </span>
+
+                                {rol === "ADMIN" && (
+                                    <span className="badge bg-warning text-dark">
+                                        ADMIN
+                                    </span>
+                                )}
 
                                 <button
                                     className="btn btn-outline-light btn-sm"

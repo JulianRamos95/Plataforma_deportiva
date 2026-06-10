@@ -2,6 +2,7 @@ package plataformadeportiva.plataforma_deportiva_backend.logic.servicios;
 
 import org.springframework.stereotype.Service;
 import plataformadeportiva.plataforma_deportiva_backend.data.LigaRepository;
+import plataformadeportiva.plataforma_deportiva_backend.dto.request.LigaRequest;
 import plataformadeportiva.plataforma_deportiva_backend.dto.response.LigaResponse;
 import plataformadeportiva.plataforma_deportiva_backend.logic.modelo.Liga;
 
@@ -41,5 +42,23 @@ public class LigaService {
         }
 
         return respuesta;
+    }
+
+    public String agregarLiga(LigaRequest request) {
+        if (request.getNombre() == null || request.getNombre().isBlank()) {
+            return "Debe ingresar el nombre de la liga";
+        }
+
+        if (request.getPais() == null || request.getPais().isBlank()) {
+            return "Debe ingresar el país de la liga";
+        }
+
+        Liga liga = new Liga();
+        liga.setNombre(request.getNombre().trim());
+        liga.setPais(request.getPais().trim());
+
+        ligaRepository.save(liga);
+
+        return "Liga agregada correctamente";
     }
 }

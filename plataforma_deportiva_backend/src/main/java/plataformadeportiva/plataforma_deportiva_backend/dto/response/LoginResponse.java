@@ -5,12 +5,14 @@ public class LoginResponse {
     private Integer id;
     private String nombre;
     private String gmail;
+    private String rol;
     private String token;
 
-    public LoginResponse(Integer id, String nombre, String gmail, String token) {
+    public LoginResponse(Integer id, String nombre, String gmail, String rol, String token) {
         this.id = id;
         this.nombre = nombre;
         this.gmail = gmail;
+        this.rol = rol;
         this.token = token;
     }
 
@@ -36,6 +38,14 @@ public class LoginResponse {
 
     public void setGmail(String gmail) {
         this.gmail = gmail;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
     }
 
     public String getToken() {

@@ -1,5 +1,6 @@
 package plataformadeportiva.plataforma_deportiva_backend.logic.servicios;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import plataformadeportiva.plataforma_deportiva_backend.data.EquipoRepository;
 import plataformadeportiva.plataforma_deportiva_backend.data.LigaRepository;
@@ -10,10 +11,7 @@ import plataformadeportiva.plataforma_deportiva_backend.logic.modelo.Liga;
 import plataformadeportiva.plataforma_deportiva_backend.logic.modelo.Partido;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PartidoService {
@@ -284,6 +282,120 @@ public class PartidoService {
                 partido.getFecha(),
                 partido.getEstado()
         );
+    }
+
+    @Transactional
+    public String simularJornadaActual(Integer idLiga) {
+        Liga liga = ligaRepository.findById(idLiga).orElse(null);
+
+        if (liga == null) {
+            return "Liga no encontrada";
+        }
+
+        List<Partido> partidos = partidoRepository.findByIdLiga_IdOrderByJornadaAscIdAsc(idLiga);
+
+        if (partidos.isEmpty()) {
+            return "La liga no tiene partidos generados";
+        }
+
+        Integer jornadaActual = null;
+
+        for (Partido partido : partidos) {
+            if ("Programado".equals(partido.getEstado())) {
+                jornadaActual = partido.getJornada();
+                break;
+            }
+        }
+
+        if (jornadaActual == null) {
+            return "No hay jornadas pendientes por simular";
+        }
+
+        List<Partido> partidosJornada = partidoRepository.findByIdLiga_IdAndJornadaOrderByIdAsc(idLiga, jornadaActual);
+
+        Random random = new Random();
+
+        for (Partido partido : partidosJornada) {
+            if ("Programado".equals(partido.getEstado())) {
+                int golesLocal = random.nextInt(6);
+                int golesVisitante = random.nextInt(6);
+
+                partido.setGolesLocal(golesLocal);
+                partido.setGolesVisitante(golesVisitante);
+                partido.setEstado("Finalizado");
+
+                actualizarEstadisticas(partido, golesLocal, golesVisitante);
+            }
+        }
+
+        partidoRepository.saveAll(partidosJornada);
+
+        return "Jornada " + jornadaActual + " simulada correctamente";
+    }
+
+    private void actualizarEstadisticas(Partido partido, int golesLocal, int golesVisitante) {
+        Equipo local = partido.getIdEquipoLocal();
+        Equipo visitante = partido.getIdEquipoVisitante();
+
+        local.setPartidosJugados(local.getPartidosJugados() + 1);
+        visitante.setPartidosJugados(visitante.getPartidosJugados() + 1);
+
+        local.setGolesFavor(local.getGolesFavor() + golesLocal);
+        local.setGolesContra(local.getGolesContra() + golesVisitante);
+
+        visitante.setGolesFavor(visitante.getGolesFavor() + golesVisitante);
+        visitante.setGolesContra(visitante.getGolesContra() + golesLocal);
+
+        if (golesLocal > golesVisitante) {
+            local.setPartidosGanados(local.getPartidosGanados() + 1);
+            local.setPuntos(local.getPuntos() + 3);
+
+            visitante.setPartidosPerdidos(visitante.getPartidosPerdidos() + 1);
+        } else if (golesVisitante > golesLocal) {
+            visitante.setPartidosGanados(visitante.getPartidosGanados() + 1);
+            visitante.setPuntos(visitante.getPuntos() + 3);
+
+            local.setPartidosPerdidos(local.getPartidosPerdidos() + 1);
+        } else {
+            local.setPartidosEmpatados(local.getPartidosEmpatados() + 1);
+            visitante.setPartidosEmpatados(visitante.getPartidosEmpatados() + 1);
+
+            local.setPuntos(local.getPuntos() + 1);
+            visitante.setPuntos(visitante.getPuntos() + 1);
+        }
+
+        equipoRepository.save(local);
+        equipoRepository.save(visitante);
+    }
+
+    @Transactional
+    public String reiniciarLiga(Integer idLiga) {
+        Liga liga = ligaRepository.findById(idLiga).orElse(null);
+
+        if (liga == null) {
+            return "Liga no encontrada";
+        }
+
+        partidoRepository.deleteByIdLiga_Id(idLiga);
+        reiniciarEstadisticasEquipos(idLiga);
+
+        return generarPartidosLiga(idLiga);
+    }
+
+    private void reiniciarEstadisticasEquipos(Integer idLiga) {
+        List<Equipo> equipos = equipoRepository.findByIdLiga_Id(idLiga);
+
+        for (Equipo equipo : equipos) {
+            equipo.setPartidosJugados(0);
+            equipo.setPartidosGanados(0);
+            equipo.setPartidosEmpatados(0);
+            equipo.setPartidosPerdidos(0);
+            equipo.setGolesFavor(0);
+            equipo.setGolesContra(0);
+            equipo.setPuntos(0);
+        }
+
+        equipoRepository.saveAll(equipos);
     }
 
     public void generarPartidosAlIniciar() {

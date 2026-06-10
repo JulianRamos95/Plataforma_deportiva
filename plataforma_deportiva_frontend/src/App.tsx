@@ -6,6 +6,8 @@ import RegistroPage from "./pages/RegistroPage";
 import HomePage from "./pages/HomePage";
 import TablaPage from "./pages/TablaPage";
 import PartidosPage from "./pages/PartidosPage";
+import AdminPage from "./pages/AdminPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 import "./App.css";
 
 function App() {
@@ -19,9 +21,42 @@ function App() {
                         <Route path="/" element={<LoginPage />} />
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/registro" element={<RegistroPage />} />
-                        <Route path="/home" element={<HomePage />} />
-                        <Route path="/equipos" element={<TablaPage />} />
-                        <Route path="/partidos" element={<PartidosPage />} />
+
+                        <Route
+                            path="/home"
+                            element={
+                                <ProtectedRoute>
+                                    <HomePage />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        <Route
+                            path="/equipos"
+                            element={
+                                <ProtectedRoute>
+                                    <TablaPage />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        <Route
+                            path="/partidos"
+                            element={
+                                <ProtectedRoute>
+                                    <PartidosPage />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        <Route
+                            path="/admin"
+                            element={
+                                <ProtectedRoute adminOnly>
+                                    <AdminPage />
+                                </ProtectedRoute>
+                            }
+                        />
                     </Routes>
                 </main>
 

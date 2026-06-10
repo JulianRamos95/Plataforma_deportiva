@@ -31,5 +31,8 @@ public class Usuario {
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
-
+    @Size(max = 20)
+    @NotNull
+    @Column(name = "rol", nullable = false, length = 20)
+    private String rol;
 }
