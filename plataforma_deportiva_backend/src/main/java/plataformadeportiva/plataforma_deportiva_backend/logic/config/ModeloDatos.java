@@ -13,11 +13,9 @@ public class ModeloDatos {
     @Autowired private PartidoService partidoService;
     @Autowired private AuthService authService;
     @Autowired private PasswordHash passwordHash;
+    @Autowired private FavoritoService favoritoService;
 
-    public PasswordHash getPasswordHash() {
-        return passwordHash;
-    }
-
+    public PasswordHash getPasswordHash() {return passwordHash; }
     public AuthService getAuthService() {
         return authService;
     }
@@ -27,12 +25,11 @@ public class ModeloDatos {
     public LigaService getLigaService() {
         return ligaService;
     }
-
     public EquipoService getEquipoService() {
         return equipoService;
     }
-
     public PartidoService getPartidoService() {
         return partidoService;
     }
+    public FavoritoService getFavoritoService() { return favoritoService; }
 }

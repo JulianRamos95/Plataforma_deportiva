@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 interface Liga {
     id: number;
@@ -7,13 +6,20 @@ interface Liga {
     pais: string;
 }
 
-interface AcordeonPaisesProps {
+interface AcordeonPaisesLigasProps {
     paises: string[];
+    ligasFavoritasIds: number[];
+    onSeleccionarLiga: (liga: Liga) => void;
+    onAlternarFavorito: (idLiga: number) => void;
 }
 
-function AcordeonPaisesLigas({ paises }: AcordeonPaisesProps) {
-    const navigate = useNavigate();
-    const [ligasPorPais, setLigasPorPais] = useState<{ [key: string]: Liga[] }>({});
+function AcordeonPaisesLigas({
+                                 paises,
+                                 ligasFavoritasIds,
+                                 onSeleccionarLiga,
+                                 onAlternarFavorito
+                             }: AcordeonPaisesLigasProps) {
+    const [ligasPorPais, setLigasPorPais] = useState<Record<string, Liga[]>>({});
 
     async function cargarLigas(pais: string) {
         if (ligasPorPais[pais]) {
@@ -29,76 +35,89 @@ function AcordeonPaisesLigas({ paises }: AcordeonPaisesProps) {
         });
 
         if (response.ok) {
-            const data = await response.json();
+            const ligas = await response.json();
+
             setLigasPorPais({
                 ...ligasPorPais,
-                [pais]: data
+                [pais]: ligas
             });
         }
     }
 
-    function seleccionarLiga(liga: Liga) {
-        localStorage.setItem("ligaId", liga.id.toString());
-        localStorage.setItem("ligaNombre", liga.nombre);
-        localStorage.setItem("ligaPais", liga.pais);
-
-        navigate("/equipos");
+    function esFavorita(idLiga: number) {
+        return ligasFavoritasIds.includes(idLiga);
     }
 
     return (
-        <div className="accordion shadow-sm" id="accordionPaises">
-            {paises.map((pais, index) => {
-                const collapseId = `collapsePais${index}`;
-                const headingId = `headingPais${index}`;
-                const ligas = ligasPorPais[pais] || [];
-
-                return (
-                    <div className="accordion-item" key={pais}>
-                        <h2 className="accordion-header" id={headingId}>
-                            <button
-                                className="accordion-button collapsed fw-bold"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target={`#${collapseId}`}
-                                aria-expanded="false"
-                                aria-controls={collapseId}
-                                onClick={() => cargarLigas(pais)}
-                            >
-                                 {pais}
-                            </button>
-                        </h2>
-
-                        <div
-                            id={collapseId}
-                            className="accordion-collapse collapse"
-                            aria-labelledby={headingId}
+        <div className="accordion" id="acordeonPaises">
+            {paises.map((pais, index) => (
+                <div className="accordion-item" key={pais}>
+                    <h2 className="accordion-header">
+                        <button
+                            className={`accordion-button ${index === 0 ? "" : "collapsed"}`}
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target={`#pais-${index}`}
+                            onClick={() => cargarLigas(pais)}
                         >
-                            <div className="accordion-body">
-                                {ligas.length === 0 ? (
-                                    <div className="alert alert-info mb-0">
-                                        No hay ligas registradas para este país.
-                                    </div>
-                                ) : (
-                                    <div className="list-group">
-                                        {ligas.map((liga) => (
+                            {pais}
+                        </button>
+                    </h2>
+
+                    <div
+                        id={`pais-${index}`}
+                        className={`accordion-collapse collapse ${index === 0 ? "show" : ""}`}
+                        data-bs-parent="#acordeonPaises"
+                    >
+                        <div className="accordion-body bg-white">
+                            {!ligasPorPais[pais] ? (
+                                <div className="text-muted">
+                                    Cargando ligas...
+                                </div>
+                            ) : ligasPorPais[pais].length === 0 ? (
+                                <div className="alert alert-warning mb-0">
+                                    No hay ligas registradas para este país.
+                                </div>
+                            ) : (
+                                <div className="list-group">
+                                    {ligasPorPais[pais].map(liga => (
+                                        <div
+                                            key={liga.id}
+                                            className="list-group-item d-flex justify-content-between align-items-center"
+                                        >
                                             <button
-                                                key={liga.id}
-                                                onClick={() => seleccionarLiga(liga)}
-                                                className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                                                className="btn btn-link text-decoration-none text-dark p-0"
+                                                onClick={() => onSeleccionarLiga(liga)}
                                             >
-                                                <span> {liga.nombre}</span>
-                                                <span className="badge bg-success">
-                                                    Ver tabla
-                                                </span>
+                                                {liga.nombre}
                                             </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
+
+                                            <button
+                                                className={
+                                                    esFavorita(liga.id)
+                                                        ? "btn btn-sm btn-warning"
+                                                        : "btn btn-sm btn-outline-success"
+                                                }
+                                                onClick={() => onAlternarFavorito(liga.id)}
+                                            >
+                                                <i className={
+                                                    esFavorita(liga.id)
+                                                        ? "fa-solid fa-star me-1"
+                                                        : "fa-regular fa-star me-1"
+                                                }></i>
+
+                                                {esFavorita(liga.id)
+                                                    ? "Quitar"
+                                                    : "Favorito"}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
-                );
-            })}
+                </div>
+            ))}
         </div>
     );
 }
