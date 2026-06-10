@@ -16,13 +16,14 @@ function ListaLigas({ ligas }: ListaLigasProps) {
     function seleccionarLiga(liga: Liga) {
         localStorage.setItem("ligaId", liga.id.toString());
         localStorage.setItem("ligaNombre", liga.nombre);
+        localStorage.setItem("ligaPais", liga.pais);
         navigate("/liga");
     }
 
     if (ligas.length === 0) {
         return (
             <div className="alert alert-info mt-3">
-                Seleccione un deporte para visualizar sus ligas.
+                Seleccione un país para visualizar sus ligas.
             </div>
         );
     }
@@ -32,6 +33,7 @@ function ListaLigas({ ligas }: ListaLigasProps) {
             <div className="card-header bg-primary text-white">
                 Ligas disponibles
             </div>
+
             <div className="list-group list-group-flush">
                 {ligas.map((liga) => (
                     <button

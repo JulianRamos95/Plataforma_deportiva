@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 function LigaPage() {
     const ligaId = localStorage.getItem("ligaId");
     const ligaNombre = localStorage.getItem("ligaNombre");
+    const ligaPais = localStorage.getItem("ligaPais");
 
     if (!ligaId) {
         return (

@@ -1,4 +1,9 @@
-CREATE DATABASE BD_PlataformaDeportiva;
+DROP DATABASE IF EXISTS BD_PlataformaDeportiva;
+
+CREATE DATABASE BD_PlataformaDeportiva
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
 USE BD_PlataformaDeportiva;
 
 CREATE TABLE usuario (
@@ -8,18 +13,10 @@ CREATE TABLE usuario (
                          nombre VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE deporte (
-                         id_deporte INT AUTO_INCREMENT PRIMARY KEY,
-                         nombre VARCHAR(100) NOT NULL,
-                         descripcion VARCHAR(255)
-);
-
 CREATE TABLE liga (
                       id_liga INT AUTO_INCREMENT PRIMARY KEY,
-                      id_deporte INT NOT NULL,
                       nombre VARCHAR(100) NOT NULL,
-                      pais VARCHAR(100),
-                      FOREIGN KEY (id_deporte) REFERENCES deporte(id_deporte)
+                      pais VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE equipo (

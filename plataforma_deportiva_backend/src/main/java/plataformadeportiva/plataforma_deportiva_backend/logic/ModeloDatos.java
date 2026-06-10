@@ -8,7 +8,6 @@ import plataformadeportiva.plataforma_deportiva_backend.logic.servicios.*;
 public class ModeloDatos {
 
     @Autowired private UsuarioService usuarioService;
-    @Autowired private DeporteService deporteService;
     @Autowired private LigaService ligaService;
     @Autowired private EquipoService equipoService;
     @Autowired private PartidoService partidoService;
@@ -25,11 +24,6 @@ public class ModeloDatos {
     public UsuarioService getUsuarioService() {
         return usuarioService;
     }
-
-    public DeporteService getDeporteService() {
-        return deporteService;
-    }
-
     public LigaService getLigaService() {
         return ligaService;
     }

@@ -16,8 +16,13 @@ public class LigaController {
         this.modeloDatos = modeloDatos;
     }
 
-    @GetMapping("/deporte/{idDeporte}")
-    public List<LigaResponse> listarPorDeporte(@PathVariable Integer idDeporte) {
-        return modeloDatos.getLigaService().listarPorDeporte(idDeporte);
+    @GetMapping("/paises")
+    public List<String> listarPaises() {
+        return modeloDatos.getLigaService().listarPaises();
+    }
+
+    @GetMapping("/pais/{pais}")
+    public List<LigaResponse> listarPorPais(@PathVariable String pais) {
+        return modeloDatos.getLigaService().listarPorPais(pais);
     }
 }

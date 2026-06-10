@@ -16,19 +16,13 @@ public class Liga {
     @Column(name = "id_liga", nullable = false)
     private Integer id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_deporte", nullable = false)
-    private Deporte idDeporte;
-
     @Size(max = 100)
     @NotNull
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
     @Size(max = 100)
-    @Column(name = "pais", length = 100)
+    @NotNull
+    @Column(name = "pais", nullable = false, length = 100)
     private String pais;
-
-
 }

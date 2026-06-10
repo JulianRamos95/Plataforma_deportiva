@@ -6,7 +6,9 @@ import plataformadeportiva.plataforma_deportiva_backend.dto.response.LigaRespons
 import plataformadeportiva.plataforma_deportiva_backend.logic.modelo.Liga;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class LigaService {
@@ -17,10 +19,20 @@ public class LigaService {
         this.ligaRepository = ligaRepository;
     }
 
-    public List<LigaResponse> listarPorDeporte(Integer idDeporte) {
+    public List<String> listarPaises() {
+        Set<String> paises = new LinkedHashSet<>();
+
+        for (Liga liga : ligaRepository.findAll()) {
+            paises.add(liga.getPais());
+        }
+
+        return new ArrayList<>(paises);
+    }
+
+    public List<LigaResponse> listarPorPais(String pais) {
         List<LigaResponse> respuesta = new ArrayList<>();
 
-        for (Liga liga : ligaRepository.findByIdDeporte_Id(idDeporte)) {
+        for (Liga liga : ligaRepository.findByPais(pais)) {
             respuesta.add(new LigaResponse(
                     liga.getId(),
                     liga.getNombre(),

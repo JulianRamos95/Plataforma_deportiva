@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react";
-import CardDeporte from "../components/CardDeporte";
+import CardPais from "../components/CardPais";
 import ListaLigas from "../components/ListaLigas";
-
-interface Deporte {
-    id: number;
-    nombre: string;
-    descripcion: string;
-}
 
 interface Liga {
     id: number;
@@ -15,12 +9,12 @@ interface Liga {
 }
 
 function HomePage() {
-    const [deportes, setDeportes] = useState<Deporte[]>([]);
+    const [paises, setPaises] = useState<string[]>([]);
     const [ligas, setLigas] = useState<Liga[]>([]);
-    const [deporteSeleccionado, setDeporteSeleccionado] = useState(0);
+    const [paisSeleccionado, setPaisSeleccionado] = useState("");
 
-    async function cargarDeportes() {
-        const response = await fetch("http://localhost:8080/api/deportes", {
+    async function cargarPaises() {
+        const response = await fetch("http://localhost:8080/api/ligas/paises", {
             method: "GET",
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -29,14 +23,14 @@ function HomePage() {
         });
 
         if (response.ok) {
-            setDeportes(await response.json());
+            setPaises(await response.json());
         }
     }
 
-    async function seleccionarDeporte(id: number) {
-        setDeporteSeleccionado(id);
+    async function seleccionarPais(pais: string) {
+        setPaisSeleccionado(pais);
 
-        const response = await fetch("http://localhost:8080/api/ligas/deporte/" + id, {
+        const response = await fetch("http://localhost:8080/api/ligas/pais/" + pais, {
             method: "GET",
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -50,21 +44,23 @@ function HomePage() {
     }
 
     useEffect(() => {
-        cargarDeportes();
+        cargarPaises();
     }, []);
 
     return (
         <section className="container py-4">
-            <h2 className="fw-bold mb-2">Deportes</h2>
-            <p className="text-muted">Seleccione un deporte para ver las ligas disponibles.</p>
+            <h2 className="fw-bold mb-2">Países</h2>
+            <p className="text-muted">
+                Seleccione un país para ver las ligas registradas.
+            </p>
 
             <div className="row">
-                {deportes.map((deporte) => (
-                    <CardDeporte
-                        key={deporte.id}
-                        deporte={deporte}
-                        seleccionado={deporteSeleccionado === deporte.id}
-                        onSeleccionar={seleccionarDeporte}
+                {paises.map((pais) => (
+                    <CardPais
+                        key={pais}
+                        pais={pais}
+                        seleccionado={paisSeleccionado === pais}
+                        onSeleccionar={seleccionarPais}
                     />
                 ))}
             </div>
