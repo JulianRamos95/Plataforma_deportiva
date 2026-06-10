@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import Header from "./components/estructura/Header";
+import Footer from "./components/estructura/Footer";
 import LoginPage from "./pages/LoginPage";
 import RegistroPage from "./pages/RegistroPage";
 import HomePage from "./pages/HomePage";
 import TablaPage from "./pages/TablaPage";
 import PartidosPage from "./pages/PartidosPage";
 import AdminPage from "./pages/AdminPage";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 import "./App.css";
 
 function App() {

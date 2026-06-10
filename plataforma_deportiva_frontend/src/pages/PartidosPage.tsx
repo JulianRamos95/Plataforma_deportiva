@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import TablaPartidos from "../components/TablaPartidos";
+import TablaPartidos from "../components/partidos/TablaPartidos";
+import PageHero from "../components/auth/PageHero";
+import MissingLigaAlert from "../components/auth/MissingLigaAlert";
+import JornadaSelector from "../components/partidos/JornadaSelector";
 
 interface Partido {
     id: number;
@@ -82,7 +85,7 @@ function PartidosPage() {
                 return;
             }
 
-            let jornadaProxima = todosPartidos[0].jornada;
+            let jornadaProxima = todosPartidos[todosPartidos.length - 1].jornada;
 
             for (let i = 0; i < todosPartidos.length; i++) {
                 if (todosPartidos[i].estado === "Programado") {
@@ -118,42 +121,22 @@ function PartidosPage() {
     }, []);
 
     if (!ligaId) {
-        return (
-            <section className="container py-4">
-                <div className="alert alert-info">
-                    Primero debe seleccionar una liga desde la página principal.
-                </div>
-            </section>
-        );
+        return <MissingLigaAlert />;
     }
 
     return (
         <section className="container py-4">
-            <div className="mb-4">
-                <h2 className="section-title mb-1">Partidos de la {ligaNombre}</h2>
-            </div>
+            <PageHero
+                titulo={`Partidos de la ${ligaNombre}`}
+                descripcion="Consulte la jornada actual, jornadas anteriores y próximas jornadas."
+            />
 
-            <div className="d-flex justify-content-center align-items-center gap-3 mb-4">
-                <button
-                    className="btn btn-outline-light"
-                    onClick={jornadaAnterior}
-                    disabled={jornada === 1}
-                >
-                    <i className="fa-solid fa-chevron-left"></i>
-                </button>
-
-                <h3 className="text-white fw-bold mb-0">
-                    Jornada {jornada}
-                </h3>
-
-                <button
-                    className="btn btn-outline-light"
-                    onClick={jornadaSiguiente}
-                    disabled={jornada === maxJornadas}
-                >
-                    <i className="fa-solid fa-chevron-right"></i>
-                </button>
-            </div>
+            <JornadaSelector
+                jornada={jornada}
+                maxJornadas={maxJornadas}
+                onAnterior={jornadaAnterior}
+                onSiguiente={jornadaSiguiente}
+            />
 
             <TablaPartidos partidos={partidos} />
         </section>

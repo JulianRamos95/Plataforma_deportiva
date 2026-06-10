@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import TablaEquipos from "../components/TablaEquipos";
+import TablaEquipos from "../components/equipos/TablaEquipos";
+import PageHero from "../components/auth/PageHero";
+import MissingLigaAlert from "../components/auth/MissingLigaAlert";
 
 interface Equipo {
     id: number;
@@ -15,6 +17,7 @@ interface Equipo {
 
 function TablaPage() {
     const [equipos, setEquipos] = useState<Equipo[]>([]);
+
     const ligaId = localStorage.getItem("ligaId");
     const ligaNombre = localStorage.getItem("ligaNombre");
 
@@ -41,22 +44,15 @@ function TablaPage() {
     }, []);
 
     if (!ligaId) {
-        return (
-            <section className="container py-4">
-                <div className="alert alert-info">
-                    Primero debe seleccionar una liga desde la página principal.
-                </div>
-            </section>
-        );
+        return <MissingLigaAlert />;
     }
 
     return (
         <section className="container py-4">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <h2 className="section-title mb-1">Tabla de posiciones de la {ligaNombre}</h2>
-                </div>
-            </div>
+            <PageHero
+                titulo={`Tabla de posiciones de la ${ligaNombre}`}
+                descripcion="Consulte el rendimiento de los equipos de la liga seleccionada."
+            />
 
             <TablaEquipos equipos={equipos} />
         </section>

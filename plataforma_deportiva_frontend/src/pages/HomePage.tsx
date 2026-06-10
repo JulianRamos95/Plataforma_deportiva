@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import AcordeonPaisesLigas from "../components/AcordeonPaisesLigas";
+import AcordeonPaisesLigas from "../components/home/AcordeonPaisesLigas";
+import PageHero from "../components/auth/PageHero";
 
 function HomePage() {
     const [paises, setPaises] = useState<string[]>([]);
@@ -24,15 +25,12 @@ function HomePage() {
 
     return (
         <section className="container py-4">
-            <div className="hero-football mb-4">
-                <h1 className="fw-bold mb-2">Seguimiento de fútbol</h1>
-                <p className="mb-0">
-                    Seleccione un país para consultar sus ligas, equipos, estadísticas y jornadas.
-                </p>
-            </div>
+            <PageHero
+                titulo="Seguimiento de fútbol"
+                descripcion="Seleccione un país para consultar sus ligas, equipos, estadísticas y jornadas."
+            />
 
             <h2 className="section-title mb-2">Países disponibles</h2>
-           
 
             <AcordeonPaisesLigas paises={paises} />
         </section>
