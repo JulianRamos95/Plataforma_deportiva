@@ -13,7 +13,7 @@ interface Equipo {
     puntos: number;
 }
 
-function EquiposPage() {
+function TablaPage() {
     const [equipos, setEquipos] = useState<Equipo[]>([]);
     const ligaId = localStorage.getItem("ligaId");
     const ligaNombre = localStorage.getItem("ligaNombre");
@@ -64,4 +64,4 @@ function EquiposPage() {
     );
 }
 
-export default EquiposPage;
+export default TablaPage;

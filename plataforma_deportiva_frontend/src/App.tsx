@@ -4,7 +4,7 @@ import Footer from "./components/Footer";
 import LoginPage from "./pages/LoginPage";
 import RegistroPage from "./pages/RegistroPage";
 import HomePage from "./pages/HomePage";
-import EquiposPage from "./pages/EquiposPage";
+import TablaPage from "./pages/TablaPage";
 import PartidosPage from "./pages/PartidosPage";
 import "./App.css";
 
@@ -20,7 +20,7 @@ function App() {
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/registro" element={<RegistroPage />} />
                         <Route path="/home" element={<HomePage />} />
-                        <Route path="/equipos" element={<EquiposPage />} />
+                        <Route path="/equipos" element={<TablaPage />} />
                         <Route path="/partidos" element={<PartidosPage />} />
                     </Routes>
                 </main>

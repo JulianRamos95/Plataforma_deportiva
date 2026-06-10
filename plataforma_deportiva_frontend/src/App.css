@@ -153,3 +153,72 @@
     padding: 35px 0;
   }
 }
+
+.partido-card {
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.tabla-partidos td {
+  padding: 20px;
+  vertical-align: middle;
+}
+
+.equipo-col {
+  width: 40%;
+  font-size: 1.05rem;
+}
+
+.resultado-col {
+  width: 20%;
+  font-weight: 800;
+  color: #0b8f4d;
+  font-size: 1.15rem;
+}
+
+.tabla-liga-card {
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.tabla-liga {
+  background: #ffffff;
+}
+
+.tabla-liga thead {
+  background: linear-gradient(90deg, #031f16, #0b5d3b);
+  color: #ffffff;
+}
+
+.tabla-liga th {
+  padding: 16px;
+  font-weight: 700;
+}
+
+.tabla-liga td {
+  padding: 15px 16px;
+  border-color: #e6ece9;
+}
+
+.tabla-liga tbody tr:hover {
+  background: #eef8f2;
+}
+
+.posicion-col {
+  font-weight: 800;
+  color: #0b5d3b;
+}
+
+.equipo-nombre {
+  color: #10251b;
+}
+
+.puntos-badge {
+  background: #0b8f4d;
+  color: #ffffff;
+  font-size: 0.95rem;
+  padding: 8px 12px;
+  border-radius: 20px;
+}

@@ -25,4 +25,10 @@ public class PartidoController {
     public List<PartidoResponse> listarPorLigaYJornada(@PathVariable Integer idLiga, @PathVariable Integer jornada) {
         return modeloDatos.getPartidoService().listarPorLigaYJornada(idLiga, jornada);
     }
+
+    @PostMapping("/generar/liga/{idLiga}")
+    public String generarPartidos(@PathVariable Integer idLiga) {
+        return modeloDatos.getPartidoService().generarPartidosLiga(idLiga);
+    }
+
 }

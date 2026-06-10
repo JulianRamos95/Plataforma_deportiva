@@ -14,22 +14,39 @@ interface Partido {
 
 function PartidosPage() {
     const [partidos, setPartidos] = useState<Partido[]>([]);
-    const [jornada, setJornada] = useState("");
+    const [jornada, setJornada] = useState(1);
+    const [maxJornadas, setMaxJornadas] = useState(18);
+
     const ligaId = localStorage.getItem("ligaId");
     const ligaNombre = localStorage.getItem("ligaNombre");
 
-    async function cargarPartidos() {
+    async function cargarPartidos(jornadaActual: number) {
         if (!ligaId) {
             return;
         }
 
-        let url = "http://localhost:8080/api/partidos/liga/" + ligaId;
+        const response = await fetch(
+            "http://localhost:8080/api/partidos/liga/" + ligaId + "/jornada/" + jornadaActual,
+            {
+                method: "GET",
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                })
+            }
+        );
 
-        if (jornada.trim() !== "") {
-            url = "http://localhost:8080/api/partidos/liga/" + ligaId + "/jornada/" + jornada;
+        if (response.ok) {
+            setPartidos(await response.json());
+        }
+    }
+
+    async function calcularMaxJornadas() {
+        if (!ligaId) {
+            return;
         }
 
-        const response = await fetch(url, {
+        const response = await fetch("http://localhost:8080/api/equipos/liga/" + ligaId, {
             method: "GET",
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -38,12 +55,30 @@ function PartidosPage() {
         });
 
         if (response.ok) {
-            setPartidos(await response.json());
+            const equipos = await response.json();
+            setMaxJornadas((equipos.length - 1) * 2);
+        }
+    }
+
+    function jornadaAnterior() {
+        if (jornada > 1) {
+            const nuevaJornada = jornada - 1;
+            setJornada(nuevaJornada);
+            cargarPartidos(nuevaJornada);
+        }
+    }
+
+    function jornadaSiguiente() {
+        if (jornada < maxJornadas) {
+            const nuevaJornada = jornada + 1;
+            setJornada(nuevaJornada);
+            cargarPartidos(nuevaJornada);
         }
     }
 
     useEffect(() => {
-        cargarPartidos();
+        calcularMaxJornadas();
+        cargarPartidos(1);
     }, []);
 
     if (!ligaId) {
@@ -58,35 +93,31 @@ function PartidosPage() {
 
     return (
         <section className="container py-4">
-            <h2 className="fw-bold">Partidos</h2>
-            <p className="text-muted">Liga seleccionada: {ligaNombre}</p>
+            <div className="mb-4">
+                <h2 className="section-title mb-1">Partidos</h2>
+                <p className="text-light mb-0">Liga seleccionada: {ligaNombre}</p>
+            </div>
 
-            <div className="card shadow-sm mb-4">
-                <div className="card-body">
-                    <div className="row g-2 align-items-end">
-                        <div className="col-12 col-md-4">
-                            <label className="form-label">Filtrar por jornada</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                value={jornada}
-                                onChange={e => setJornada(e.target.value)}
-                            />
-                        </div>
+            <div className="d-flex justify-content-center align-items-center gap-3 mb-4">
+                <button
+                    className="btn btn-outline-light"
+                    onClick={jornadaAnterior}
+                    disabled={jornada === 1}
+                >
+                    <i className="fa-solid fa-chevron-left"></i>
+                </button>
 
-                        <div className="col-12 col-md-3">
-                            <button onClick={cargarPartidos} className="btn btn-primary w-100">
-                                Buscar
-                            </button>
-                        </div>
+                <h3 className="text-white fw-bold mb-0">
+                    Jornada {jornada}
+                </h3>
 
-                        <div className="col-12 col-md-3">
-                            <button onClick={() => { setJornada(""); cargarPartidos(); }} className="btn btn-secondary w-100">
-                                Ver todos
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <button
+                    className="btn btn-outline-light"
+                    onClick={jornadaSiguiente}
+                    disabled={jornada === maxJornadas}
+                >
+                    <i className="fa-solid fa-chevron-right"></i>
+                </button>
             </div>
 
             <TablaPartidos partidos={partidos} />
