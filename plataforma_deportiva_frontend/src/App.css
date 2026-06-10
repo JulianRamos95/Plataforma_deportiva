@@ -1,38 +1,54 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+.app-layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background: #f3f6f4;
+}
+
+.main-content {
+  flex: 1;
+}
+
+.app-navbar {
+  background: linear-gradient(90deg, #062c1f, #0b5d3b);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
+}
+
+.footer-deportivo {
+  background: linear-gradient(90deg, #062c1f, #0b5d3b);
+}
+
+.hero-football {
+  background: linear-gradient(135deg, #0b5d3b, #121212);
+  color: white;
+  border-radius: 20px;
+  padding: 45px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.card-football {
+  border: none;
+  border-radius: 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-football:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+
+.btn-football {
+  background: #0b8f4d;
+  border: none;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.btn-football:hover {
+  background: #08733e;
+  color: white;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.section-title {
+  font-weight: 800;
+  color: #123524;
 }

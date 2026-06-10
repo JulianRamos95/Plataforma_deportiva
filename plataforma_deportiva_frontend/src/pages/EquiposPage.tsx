@@ -52,8 +52,12 @@ function EquiposPage() {
 
     return (
         <section className="container py-4">
-            <h2 className="fw-bold">Equipos</h2>
-            <p className="text-muted">Liga seleccionada: {ligaNombre}</p>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h2 className="section-title mb-1">Tabla de posiciones</h2>
+                    <p className="text-muted mb-0">Liga seleccionada: {ligaNombre}</p>
+                </div>
+            </div>
 
             <TablaEquipos equipos={equipos} />
         </section>

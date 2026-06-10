@@ -17,7 +17,7 @@ function ListaLigas({ ligas }: ListaLigasProps) {
         localStorage.setItem("ligaId", liga.id.toString());
         localStorage.setItem("ligaNombre", liga.nombre);
         localStorage.setItem("ligaPais", liga.pais);
-        navigate("/liga");
+        navigate("/equipos");
     }
 
     if (ligas.length === 0) {

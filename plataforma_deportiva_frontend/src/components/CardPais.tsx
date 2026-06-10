@@ -7,13 +7,18 @@ interface CardPaisProps {
 function CardPais({ pais, seleccionado, onSeleccionar }: CardPaisProps) {
     return (
         <div className="col-12 col-md-6 col-lg-4 mb-3">
-            <div className={`card h-100 shadow-sm ${seleccionado ? "border-primary" : ""}`}>
+            <div className={`card card-football h-100 ${seleccionado ? "border border-success border-2" : ""}`}>
                 <div className="card-body">
-                    <h5 className="card-title">{pais}</h5>
+                    <div className="d-flex align-items-center justify-content-between mb-3">
+                        <h5 className="card-title mb-0">🌍 {pais}</h5>
+                        <span className="badge bg-success">País</span>
+                    </div>
+
                     <p className="card-text text-muted">
-                        Consulte las ligas registradas para este país.
+                        Consulte las ligas de fútbol registradas en este país.
                     </p>
-                    <button onClick={() => onSeleccionar(pais)} className="btn btn-primary w-100">
+
+                    <button onClick={() => onSeleccionar(pais)} className="btn btn-football w-100">
                         Ver ligas
                     </button>
                 </div>

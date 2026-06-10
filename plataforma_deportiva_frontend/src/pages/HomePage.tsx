@@ -49,10 +49,15 @@ function HomePage() {
 
     return (
         <section className="container py-4">
-            <h2 className="fw-bold mb-2">Países</h2>
-            <p className="text-muted">
-                Seleccione un país para ver las ligas registradas.
-            </p>
+            <div className="hero-football mb-4">
+                <h1 className="fw-bold mb-2">Seguimiento de fútbol</h1>
+                <p className="mb-0">
+                    Seleccione un país para consultar sus ligas, equipos, estadísticas y jornadas.
+                </p>
+            </div>
+
+            <h2 className="section-title mb-2">Países disponibles</h2>
+            <p className="text-muted">Elija un país para ver las ligas registradas.</p>
 
             <div className="row">
                 {paises.map((pais) => (

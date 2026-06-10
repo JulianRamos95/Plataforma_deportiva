@@ -1,8 +1,9 @@
 function Footer() {
     return (
-        <footer className="bg-dark text-white text-center py-3 mt-auto">
-            <div className="container">
-                <small>Plataforma Deportiva - Proyecto React</small>
+        <footer className="footer-deportivo text-white py-4 mt-auto">
+            <div className="container text-center">
+                <h6 className="mb-1">⚽ FutbolTrack</h6>
+                <small>Seguimiento de ligas, equipos, estadísticas y jornadas.</small>
             </div>
         </footer>
     );
