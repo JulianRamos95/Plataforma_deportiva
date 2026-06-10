@@ -11,7 +11,9 @@ import plataformadeportiva.plataforma_deportiva_backend.logic.modelo.Partido;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PartidoService {
@@ -60,6 +62,7 @@ public class PartidoService {
         int cantidadEquipos = equipos.size();
         int jornadasPorVuelta = cantidadEquipos - 1;
         int partidosPorJornada = cantidadEquipos / 2;
+        int totalJornadas = jornadasPorVuelta * 2;
 
         List<Equipo> rotacion = new ArrayList<>(equipos);
 
@@ -98,25 +101,163 @@ public class PartidoService {
             rotacion.add(1, ultimo);
         }
 
+        boolean localiasAjustadas = ajustarLocaliasMaximoDosSeguidas(partidos, totalJornadas);
+
+        if (!localiasAjustadas) {
+            return "No fue posible generar partidos respetando el máximo de 2 partidos seguidos en casa";
+        }
+
         partidoRepository.saveAll(partidos);
 
         return "Partidos generados correctamente";
     }
 
+    private boolean ajustarLocaliasMaximoDosSeguidas(List<Partido> partidos, int totalJornadas) {
+        Map<Integer, Integer> rachasCasa = new HashMap<>();
+
+        for (int jornada = 1; jornada <= totalJornadas; jornada++) {
+            List<Partido> partidosJornada = obtenerPartidosPorJornada(partidos, jornada);
+
+            boolean[] invertirPartidos = new boolean[partidosJornada.size()];
+
+            boolean jornadaValida = buscarAsignacionLocalias(
+                    partidosJornada,
+                    0,
+                    rachasCasa,
+                    invertirPartidos
+            );
+
+            if (!jornadaValida) {
+                return false;
+            }
+
+            aplicarInversiones(partidosJornada, invertirPartidos);
+            actualizarRachasCasa(partidosJornada, rachasCasa);
+        }
+
+        return true;
+    }
+
+    private List<Partido> obtenerPartidosPorJornada(List<Partido> partidos, int jornada) {
+        List<Partido> partidosJornada = new ArrayList<>();
+
+        for (Partido partido : partidos) {
+            if (partido.getJornada().equals(jornada)) {
+                partidosJornada.add(partido);
+            }
+        }
+
+        return partidosJornada;
+    }
+
+    private boolean buscarAsignacionLocalias(
+            List<Partido> partidosJornada,
+            int indice,
+            Map<Integer, Integer> rachasCasa,
+            boolean[] invertirPartidos
+    ) {
+        if (indice == partidosJornada.size()) {
+            return true;
+        }
+
+        Partido partido = partidosJornada.get(indice);
+
+        Equipo localOriginal = partido.getIdEquipoLocal();
+        Equipo visitanteOriginal = partido.getIdEquipoVisitante();
+
+        List<Boolean> opciones = obtenerOrdenOpciones(localOriginal, visitanteOriginal, rachasCasa);
+
+        for (Boolean invertir : opciones) {
+            Equipo local;
+            Equipo visitante;
+
+            if (invertir) {
+                local = visitanteOriginal;
+                visitante = localOriginal;
+            } else {
+                local = localOriginal;
+                visitante = visitanteOriginal;
+            }
+
+            int rachaActualLocal = rachasCasa.getOrDefault(local.getId(), 0);
+
+            if (rachaActualLocal >= 2) {
+                continue;
+            }
+
+            Map<Integer, Integer> nuevasRachas = new HashMap<>(rachasCasa);
+            nuevasRachas.put(local.getId(), rachaActualLocal + 1);
+            nuevasRachas.put(visitante.getId(), 0);
+
+            invertirPartidos[indice] = invertir;
+
+            boolean asignacionValida = buscarAsignacionLocalias(
+                    partidosJornada,
+                    indice + 1,
+                    nuevasRachas,
+                    invertirPartidos
+            );
+
+            if (asignacionValida) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private List<Boolean> obtenerOrdenOpciones(
+            Equipo localOriginal,
+            Equipo visitanteOriginal,
+            Map<Integer, Integer> rachasCasa
+    ) {
+        List<Boolean> opciones = new ArrayList<>();
+
+        int rachaLocalOriginal = rachasCasa.getOrDefault(localOriginal.getId(), 0);
+        int rachaVisitanteOriginal = rachasCasa.getOrDefault(visitanteOriginal.getId(), 0);
+
+        if (rachaLocalOriginal > rachaVisitanteOriginal) {
+            opciones.add(true);
+            opciones.add(false);
+        } else {
+            opciones.add(false);
+            opciones.add(true);
+        }
+
+        return opciones;
+    }
+
+    private void aplicarInversiones(List<Partido> partidosJornada, boolean[] invertirPartidos) {
+        for (int i = 0; i < partidosJornada.size(); i++) {
+            if (invertirPartidos[i]) {
+                Partido partido = partidosJornada.get(i);
+
+                Equipo local = partido.getIdEquipoLocal();
+                Equipo visitante = partido.getIdEquipoVisitante();
+
+                partido.setIdEquipoLocal(visitante);
+                partido.setIdEquipoVisitante(local);
+            }
+        }
+    }
+
+    private void actualizarRachasCasa(List<Partido> partidosJornada, Map<Integer, Integer> rachasCasa) {
+        for (Partido partido : partidosJornada) {
+            Integer idLocal = partido.getIdEquipoLocal().getId();
+            Integer idVisitante = partido.getIdEquipoVisitante().getId();
+
+            int rachaActualLocal = rachasCasa.getOrDefault(idLocal, 0);
+
+            rachasCasa.put(idLocal, rachaActualLocal + 1);
+            rachasCasa.put(idVisitante, 0);
+        }
+    }
+
     public List<PartidoResponse> listarPorLiga(Integer idLiga) {
         List<PartidoResponse> respuesta = new ArrayList<>();
 
-        for (Partido partido : partidoRepository.findByIdLiga_Id(idLiga)) {
-            respuesta.add(new PartidoResponse(
-                    partido.getId(),
-                    partido.getIdEquipoLocal().getNombre(),
-                    partido.getIdEquipoVisitante().getNombre(),
-                    partido.getGolesLocal(),
-                    partido.getGolesVisitante(),
-                    partido.getJornada(),
-                    partido.getFecha(),
-                    partido.getEstado()
-            ));
+        for (Partido partido : partidoRepository.findByIdLiga_IdOrderByJornadaAscIdAsc(idLiga)) {
+            respuesta.add(convertirAResponse(partido));
         }
 
         return respuesta;
@@ -125,20 +266,24 @@ public class PartidoService {
     public List<PartidoResponse> listarPorLigaYJornada(Integer idLiga, Integer jornada) {
         List<PartidoResponse> respuesta = new ArrayList<>();
 
-        for (Partido partido : partidoRepository.findByIdLiga_IdAndJornada(idLiga, jornada)) {
-            respuesta.add(new PartidoResponse(
-                    partido.getId(),
-                    partido.getIdEquipoLocal().getNombre(),
-                    partido.getIdEquipoVisitante().getNombre(),
-                    partido.getGolesLocal(),
-                    partido.getGolesVisitante(),
-                    partido.getJornada(),
-                    partido.getFecha(),
-                    partido.getEstado()
-            ));
+        for (Partido partido : partidoRepository.findByIdLiga_IdAndJornadaOrderByIdAsc(idLiga, jornada)) {
+            respuesta.add(convertirAResponse(partido));
         }
 
         return respuesta;
+    }
+
+    private PartidoResponse convertirAResponse(Partido partido) {
+        return new PartidoResponse(
+                partido.getId(),
+                partido.getIdEquipoLocal().getNombre(),
+                partido.getIdEquipoVisitante().getNombre(),
+                partido.getGolesLocal(),
+                partido.getGolesVisitante(),
+                partido.getJornada(),
+                partido.getFecha(),
+                partido.getEstado()
+        );
     }
 
     public void generarPartidosAlIniciar() {

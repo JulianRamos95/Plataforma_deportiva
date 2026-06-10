@@ -1,4 +1,4 @@
-package plataformadeportiva.plataforma_deportiva_backend.logic;
+package plataformadeportiva.plataforma_deportiva_backend.logic.config;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

@@ -11,4 +11,6 @@ public interface PartidoRepository extends CrudRepository<Partido, Integer> {
     List<Partido> findByIdLiga_Id(Integer idLiga);
     List<Partido> findByIdLiga_IdAndJornada(Integer idLiga, Integer jornada);
     boolean existsByIdLiga_Id(Integer idLiga);
+    List<Partido> findByIdLiga_IdOrderByJornadaAscIdAsc(Integer idLiga);
+    List<Partido> findByIdLiga_IdAndJornadaOrderByIdAsc(Integer idLiga, Integer jornada);
 }

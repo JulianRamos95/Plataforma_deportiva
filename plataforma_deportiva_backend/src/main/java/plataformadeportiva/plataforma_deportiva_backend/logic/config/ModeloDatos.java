@@ -1,4 +1,4 @@
-package plataformadeportiva.plataforma_deportiva_backend.logic;
+package plataformadeportiva.plataforma_deportiva_backend.logic.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

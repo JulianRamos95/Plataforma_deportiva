@@ -2,7 +2,7 @@ package plataformadeportiva.plataforma_deportiva_backend.controllers;
 
 import org.springframework.web.bind.annotation.*;
 import plataformadeportiva.plataforma_deportiva_backend.dto.response.PartidoResponse;
-import plataformadeportiva.plataforma_deportiva_backend.logic.ModeloDatos;
+import plataformadeportiva.plataforma_deportiva_backend.logic.config.ModeloDatos;
 
 import java.util.List;
 
