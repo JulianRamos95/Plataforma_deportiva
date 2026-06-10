@@ -1,17 +1,8 @@
 import { useEffect, useState } from "react";
-import CardPais from "../components/CardPais";
-import ListaLigas from "../components/ListaLigas";
-
-interface Liga {
-    id: number;
-    nombre: string;
-    pais: string;
-}
+import AcordeonPaisesLigas from "../components/AcordeonPaisesLigas";
 
 function HomePage() {
     const [paises, setPaises] = useState<string[]>([]);
-    const [ligas, setLigas] = useState<Liga[]>([]);
-    const [paisSeleccionado, setPaisSeleccionado] = useState("");
 
     async function cargarPaises() {
         const response = await fetch("http://localhost:8080/api/ligas/paises", {
@@ -24,22 +15,6 @@ function HomePage() {
 
         if (response.ok) {
             setPaises(await response.json());
-        }
-    }
-
-    async function seleccionarPais(pais: string) {
-        setPaisSeleccionado(pais);
-
-        const response = await fetch("http://localhost:8080/api/ligas/pais/" + pais, {
-            method: "GET",
-            headers: new Headers({
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            })
-        });
-
-        if (response.ok) {
-            setLigas(await response.json());
         }
     }
 
@@ -57,20 +32,11 @@ function HomePage() {
             </div>
 
             <h2 className="section-title mb-2">Países disponibles</h2>
-            <p className="text-muted">Elija un país para ver las ligas registradas.</p>
+            <p className="text-muted">
+                Abra un país para ver sus ligas registradas.
+            </p>
 
-            <div className="row">
-                {paises.map((pais) => (
-                    <CardPais
-                        key={pais}
-                        pais={pais}
-                        seleccionado={paisSeleccionado === pais}
-                        onSeleccionar={seleccionarPais}
-                    />
-                ))}
-            </div>
-
-            <ListaLigas ligas={ligas} />
+            <AcordeonPaisesLigas paises={paises} />
         </section>
     );
 }
