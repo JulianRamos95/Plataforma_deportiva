@@ -33,7 +33,7 @@ function Header() {
                     className="navbar-brand fw-bold"
                     to={token ? "/home" : "/login"}
                 >
-                    ⚽ FutbolTrack
+                    <i className="fa-regular fa-futbol"></i> FutbolTrack
                 </Link>
 
                 {!esPantallaPublica && (

@@ -86,7 +86,7 @@ function AcordeonPaisesLigas({ paises }: AcordeonPaisesProps) {
                                                 onClick={() => seleccionarLiga(liga)}
                                                 className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                                             >
-                                                <span>⚽ {liga.nombre}</span>
+                                                <span> {liga.nombre}</span>
                                                 <span className="badge bg-success">
                                                     Ver tabla
                                                 </span>

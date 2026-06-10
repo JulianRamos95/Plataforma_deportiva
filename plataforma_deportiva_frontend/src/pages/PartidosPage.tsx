@@ -94,8 +94,7 @@ function PartidosPage() {
     return (
         <section className="container py-4">
             <div className="mb-4">
-                <h2 className="section-title mb-1">Partidos</h2>
-                <p className="text-light mb-0">Liga seleccionada: {ligaNombre}</p>
+                <h2 className="section-title mb-1">Partidos de la {ligaNombre}</h2>
             </div>
 
             <div className="d-flex justify-content-center align-items-center gap-3 mb-4">

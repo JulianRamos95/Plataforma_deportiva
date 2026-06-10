@@ -54,8 +54,7 @@ function TablaPage() {
         <section className="container py-4">
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h2 className="section-title mb-1">Tabla de posiciones</h2>
-                    <p className="text-muted mb-0">Liga seleccionada: {ligaNombre}</p>
+                    <h2 className="section-title mb-1">Tabla de posiciones de la {ligaNombre}</h2>
                 </div>
             </div>
 

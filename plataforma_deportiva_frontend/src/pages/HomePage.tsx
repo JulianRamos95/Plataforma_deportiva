@@ -32,9 +32,7 @@ function HomePage() {
             </div>
 
             <h2 className="section-title mb-2">Países disponibles</h2>
-            <p className="text-muted">
-                Abra un país para ver sus ligas registradas.
-            </p>
+           
 
             <AcordeonPaisesLigas paises={paises} />
         </section>

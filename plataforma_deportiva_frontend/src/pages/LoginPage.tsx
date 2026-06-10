@@ -88,7 +88,7 @@ function LoginPage() {
                         <div className="login-intro">
                             <span className="badge bg-success mb-3">
                                 <i className="fa-solid fa-futbol me-2"></i>
-                                Plataforma de seguimiento deportivo
+                                Plataforma de seguimiento de fútbol
                             </span>
 
                             <h1 className="fw-bold mb-3">
