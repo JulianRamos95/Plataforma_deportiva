@@ -24,7 +24,7 @@ function LoginPage() {
             localStorage.setItem("nombre", data.nombre);
             localStorage.setItem("gmail", data.gmail);
 
-            navigate("/");
+            navigate("/home");
         } else {
             alert("Credenciales incorrectas");
         }
