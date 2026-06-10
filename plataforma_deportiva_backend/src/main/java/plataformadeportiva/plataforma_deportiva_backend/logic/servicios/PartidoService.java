@@ -405,4 +405,17 @@ public class PartidoService {
             }
         }
     }
+
+    public List<PartidoResponse> listarPorEquipo(Integer idEquipo) {
+        List<PartidoResponse> respuesta = new ArrayList<>();
+
+        List<Partido> partidos = partidoRepository
+                .findByIdEquipoLocal_IdOrIdEquipoVisitante_IdOrderByJornadaAscIdAsc(idEquipo, idEquipo);
+
+        for (Partido partido : partidos) {
+            respuesta.add(convertirAResponse(partido));
+        }
+
+        return respuesta;
+    }
 }

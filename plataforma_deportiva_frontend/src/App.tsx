@@ -8,6 +8,7 @@ import TablaPage from "./pages/TablaPage";
 import PartidosPage from "./pages/PartidosPage";
 import AdminPage from "./pages/AdminPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import EquipoDetallePage from "./pages/EquipoDetallePage";
 import "./App.css";
 
 function App() {
@@ -21,42 +22,11 @@ function App() {
                         <Route path="/" element={<LoginPage />} />
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/registro" element={<RegistroPage />} />
-
-                        <Route
-                            path="/home"
-                            element={
-                                <ProtectedRoute>
-                                    <HomePage />
-                                </ProtectedRoute>
-                            }
-                        />
-
-                        <Route
-                            path="/equipos"
-                            element={
-                                <ProtectedRoute>
-                                    <TablaPage />
-                                </ProtectedRoute>
-                            }
-                        />
-
-                        <Route
-                            path="/partidos"
-                            element={
-                                <ProtectedRoute>
-                                    <PartidosPage />
-                                </ProtectedRoute>
-                            }
-                        />
-
-                        <Route
-                            path="/admin"
-                            element={
-                                <ProtectedRoute adminOnly>
-                                    <AdminPage />
-                                </ProtectedRoute>
-                            }
-                        />
+                        <Route path="/home" element={<ProtectedRoute> <HomePage /> </ProtectedRoute>} />
+                        <Route path="/equipos" element={ <ProtectedRoute><TablaPage /></ProtectedRoute>} />
+                        <Route path="/partidos" element={<ProtectedRoute><PartidosPage /></ProtectedRoute>} />
+                        <Route path="/admin" element={<ProtectedRoute adminOnly><AdminPage /></ProtectedRoute>} />
+                        <Route path="/equipo/:idEquipo" element={<ProtectedRoute><EquipoDetallePage /></ProtectedRoute>} />
                     </Routes>
                 </main>
 

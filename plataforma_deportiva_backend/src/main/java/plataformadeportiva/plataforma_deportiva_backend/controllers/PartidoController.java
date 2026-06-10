@@ -31,4 +31,8 @@ public class PartidoController {
         return modeloDatos.getPartidoService().generarPartidosLiga(idLiga);
     }
 
+    @GetMapping("/equipo/{idEquipo}")
+    public List<PartidoResponse> listarPorEquipo(@PathVariable Integer idEquipo) {
+        return modeloDatos.getPartidoService().listarPorEquipo(idEquipo);
+    }
 }

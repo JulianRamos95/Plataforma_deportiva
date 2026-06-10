@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import TablaEquipos from "../components/equipos/TablaEquipos";
+import TablaEquipos from "../components/equipo/TablaEquipos";
 import PageHero from "../components/auth/PageHero";
 import MissingLigaAlert from "../components/auth/MissingLigaAlert";
 
